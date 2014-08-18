@@ -19,6 +19,12 @@
   <email>anant@php.net</email>
   <active>yes</active>
  </lead>
+ <lead>
+  <name>John Turingan</name>
+  <user>redrockrasta</user>
+  <email>redrockrasta@yahoo.com</email>
+  <active>yes</active>
+ </lead>
  <date>2012-12-31</date>
  <version>
   <release>0.1.0</release>

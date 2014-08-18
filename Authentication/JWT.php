@@ -1,5 +1,7 @@
 <?php
 
+namespace Snp\phpjwt;
+
 /**
  * JSON Web Token implementation, based on this spec:
  * http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06
@@ -32,7 +34,7 @@ class JWT
      * @return object      The JWT's payload as a PHP object
      * @throws UnexpectedValueException Provided JWT was invalid
      * @throws DomainException          Algorithm was not provided
-     * 
+     *
      * @uses jsonDecode
      * @uses urlsafeB64Decode
      */
@@ -40,33 +42,33 @@ class JWT
     {
         $tks = explode('.', $jwt);
         if (count($tks) != 3) {
-            throw new UnexpectedValueException('Wrong number of segments');
+            throw new \UnexpectedValueException('Wrong number of segments');
         }
         list($headb64, $bodyb64, $cryptob64) = $tks;
         if (null === ($header = JWT::jsonDecode(JWT::urlsafeB64Decode($headb64)))) {
-            throw new UnexpectedValueException('Invalid segment encoding');
+            throw new \UnexpectedValueException('Invalid segment encoding');
         }
         if (null === $payload = JWT::jsonDecode(JWT::urlsafeB64Decode($bodyb64))) {
-            throw new UnexpectedValueException('Invalid segment encoding');
+            throw new \UnexpectedValueException('Invalid segment encoding');
         }
         $sig = JWT::urlsafeB64Decode($cryptob64);
         if ($verify) {
             if (empty($header->alg)) {
-                throw new DomainException('Empty algorithm');
+                throw new \DomainException('Empty algorithm');
             }
             if (is_array($key)) {
                 if(isset($header->kid)) {
                     $key = $key[$header->kid];
                 } else {
-                    throw new DomainException('"kid" empty, unable to lookup correct key');
+                    throw new \DomainException('"kid" empty, unable to lookup correct key');
                 }
             }
             if (!JWT::verify("$headb64.$bodyb64", $sig, $key, $header->alg)) {
-                throw new UnexpectedValueException('Signature verification failed');
+                throw new \UnexpectedValueException('Signature verification failed');
             }
             // Check token expiry time if defined.
             if (isset($payload->exp) && time() >= $payload->exp){
-                throw new UnexpectedValueException('Expired Token');
+                throw new \UnexpectedValueException('Expired Token');
             }
         }
         return $payload;
@@ -115,7 +117,7 @@ class JWT
     public static function sign($msg, $key, $method = 'HS256')
     {
         if (empty(self::$methods[$method])) {
-            throw new DomainException('Algorithm not supported');
+            throw new \DomainException('Algorithm not supported');
         }
         list($function, $algo) = self::$methods[$method];
         switch($function) {
@@ -125,7 +127,7 @@ class JWT
                 $signature = '';
                 $success = openssl_sign($msg, $signature, $key, $algo);
                 if(!$success) {
-                    throw new DomainException("OpenSSL unable to sign data");
+                    throw new \DomainException("OpenSSL unable to sign data");
                 } else {
                     return $signature;
                 }
@@ -144,14 +146,14 @@ class JWT
      */
     public static function verify($msg, $signature, $key, $method = 'HS256') {
         if (empty(self::$methods[$method])) {
-            throw new DomainException('Algorithm not supported');
+            throw new \DomainException('Algorithm not supported');
         }
         list($function, $algo) = self::$methods[$method];
         switch($function) {
             case 'openssl':
                 $success = openssl_verify($msg, $signature, $key, $algo);
                 if(!$success) {
-                    throw new DomainException("OpenSSL unable to verify data: " . openssl_error_string());
+                    throw new \DomainException("OpenSSL unable to verify data: " . openssl_error_string());
                 } else {
                     return $signature;
                 }
@@ -188,7 +190,7 @@ class JWT
         if (function_exists('json_last_error') && $errno = json_last_error()) {
             JWT::_handleJsonError($errno);
         } else if ($obj === null && $input !== 'null') {
-            throw new DomainException('Null result with non-null input');
+            throw new \DomainException('Null result with non-null input');
         }
         return $obj;
     }
@@ -207,7 +209,7 @@ class JWT
         if (function_exists('json_last_error') && $errno = json_last_error()) {
             JWT::_handleJsonError($errno);
         } else if ($json === 'null' && $input !== null) {
-            throw new DomainException('Null result with non-null input');
+            throw new \DomainException('Null result with non-null input');
         }
         return $json;
     }
@@ -255,7 +257,7 @@ class JWT
             JSON_ERROR_CTRL_CHAR => 'Unexpected control character found',
             JSON_ERROR_SYNTAX => 'Syntax error, malformed JSON'
         );
-        throw new DomainException(
+        throw new \DomainException(
             isset($messages[$errno])
             ? $messages[$errno]
             : 'Unknown JSON error: ' . $errno

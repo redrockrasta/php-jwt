@@ -1,5 +1,7 @@
 <?php
 
+use Snp\phpjwt\JWT;
+
 class JWTTest extends PHPUnit_Framework_TestCase {
 	function testEncodeDecode() {
 		$msg = JWT::encode('abc', 'my_key');
