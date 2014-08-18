@@ -1,6 +1,7 @@
 {
     "name": "redrockrasta/php-jwt",
     "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP.",
+    "license": "BSD-3-Clause",
     "homepage": "https://github.com/redrockrasta/php-jwt",
     "authors": [
         {
@@ -15,21 +16,18 @@
         },
         {
             "name": "John Turingan",
-            "email": "redrockrasta@yahoo.com",
-            "role": "Developer"
+            "email": "redrockrasta@yahoo.com"
         }
     ],
-    "license": "BSD-3-Clause",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.2.0"
     },
     "autoload": {
-        "classmap": ["Authentication/"],
-        "psr-0": {
-            "Snp\\phpjwt\\": "Authentication/"
-            }
+    "classmap": ["Authentication/"],
+    "psr-0": {
+        "Snp\\phpjwt\\": "Authentication/"
+        }
     },
-
     "target-dir": "SNP/PHP-JWT",
-    "minimum-stability": "dev"
 }
