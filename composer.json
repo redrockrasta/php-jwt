@@ -29,5 +29,5 @@
         "Snp\\phpjwt\\": "Authentication/"
         }
     },
-    "target-dir": "SNP/PHP-JWT",
+    "target-dir": "SNP/PHP-JWT"
 }
